@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sample/base/config.dart';
+import 'package:flutter_sample/screen/bottom_navigation_screen.dart';
 import 'package:flutter_sample/screen/webview_screen.dart';
 import 'package:flutter_sample/utils/firebase.dart';
 import 'package:flutter_sample/utils/notification.dart';
@@ -26,14 +27,15 @@ Future<void> main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+/* WebView */
+class WebView extends StatefulWidget {
+  const WebView({super.key});
 
   @override
   State<StatefulWidget> createState() => _WebViewState();
 }
 
-class _WebViewState extends State<MyApp> {
+class _WebViewState extends State<WebView> {
   late final WebViewController controller;
   String url = "/";
 
@@ -50,22 +52,22 @@ class _WebViewState extends State<MyApp> {
     });
   }
 
-  // 알림 클릭 이벤트 리스너 설정 (IOS)
-  // void _configureDidReceiveLocalNotificationSubject() {
-  //   notification.didReceiveNotificationSubject.listen((event) async {
-  //     if (event.payload != null) {
-  //       setState(() {
-  //         url = event.payload!;
-  //       });
-  //     }
-  //   });
-  // }
+  //알림 클릭 이벤트 리스너 설정 (IOS)
+  void _configureDidReceiveLocalNotificationSubject() {
+    notification.didReceiveNotificationSubject.listen((event) async {
+      if (event.payload != null) {
+        setState(() {
+          url = event.payload!;
+        });
+      }
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     _configureSelectNotificationSubject();
-    // _configureDidReceiveLocalNotificationSubject();
+    _configureDidReceiveLocalNotificationSubject();
     controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(const Color(0x00000000))
@@ -104,6 +106,20 @@ class _WebViewState extends State<MyApp> {
       //   useMaterial3: true,
       // ),
       home: WebviewScreen(controller),
+    );
+  }
+}
+
+/* Flutter App */
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: Constants.title,
+      home: BottomNavigationScreen(),
     );
   }
 }

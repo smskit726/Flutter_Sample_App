@@ -5,12 +5,12 @@ abstract class BaseScreen extends StatelessWidget {
 
   void onStart() {}
 
-  Widget buildBody();
+  Widget buildBody(BuildContext ctx);
 
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) => onStart());
 
-    return buildBody();
+    return buildBody(context);
   }
 }

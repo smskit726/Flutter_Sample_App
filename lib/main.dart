@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_sample/screen/main_screen.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter_sample/base/config.dart';
-import 'package:flutter_sample/screen/bottom_navigation_screen.dart';
 import 'package:flutter_sample/screen/webview_screen.dart';
 import 'package:flutter_sample/utils/firebase.dart';
 import 'package:flutter_sample/utils/notification.dart';
 import 'package:flutter_sample/utils/permissions.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+import 'base/base_screen.dart';
 import 'utils/constants.dart';
 
 Future<void> main() async {
@@ -24,7 +26,7 @@ Future<void> main() async {
   PermissionsUtil permissionsUtil = PermissionsUtil();
   await permissionsUtil.requestPermissions();
 
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 /* WebView */
@@ -111,15 +113,21 @@ class _WebViewState extends State<WebView> {
 }
 
 /* Flutter App */
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyApp extends BaseScreen {
+  final GoRouter _router = GoRouter(
+    initialLocation: '/',
+    routes: [
+      GoRoute(path: '/', builder: (context, state) => const MainScreen()),
+    ],
+  );
+
+  MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
+  Widget buildBody(BuildContext ctx) {
+    return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      title: Constants.title,
-      home: BottomNavigationScreen(),
+      routerConfig: _router,
     );
   }
 }
